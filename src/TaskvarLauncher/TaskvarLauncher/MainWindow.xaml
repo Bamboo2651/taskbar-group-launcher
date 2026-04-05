@@ -4,13 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="TaskbarLauncher"
-        Height="60"
-        Width="400"
-        WindowStyle="None"
-        Topmost="True"
-        ResizeMode="NoResize"
-        Background="#2D2D2D">
+        Title="StackBar - 設定"
+        Height="800"
+        Width="1200"
+        MinHeight="800"
+        MinWidth="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E2E">
     <Grid>
     </Grid>
 </Window>
