@@ -34,15 +34,20 @@
                 </Grid.RowDefinitions>
 
                 <ListBox Grid.Row="0"
+				     x:Name="GroupList"
                      ItemsSource="{Binding Groups}"
                      Background="Transparent"
                      BorderThickness="0"
-                     Foreground="#FFFFFF">
+                     Foreground="#FFFFFF"
+				     SelectionChanged="GroupList_SelectionChanged"
+						 >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}" 
                            FontSize="14"
-                           Padding="8,6"/>
+                           Padding="8,6"
+						   TextTrimming="CharacterEllipsis"
+						   MaxWidth="200"/>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
@@ -69,13 +74,53 @@
         </Grid>
 
         <!-- メインコンテンツ -->
-        <Border Grid.Column="1" Padding="24">
-            <TextBlock Text="グループを選択してください" 
-                       Foreground="#888888"
-                       FontSize="14"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-        </Border>
+		<!-- メインコンテンツ -->
+		<Grid Grid.Column="1">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto"/>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="60"/>
+			</Grid.RowDefinitions>
+
+			<!-- グループ名 -->
+			<TextBlock Grid.Row="0"
+					   x:Name="GroupTitle"
+					   Text="グループを選択してください"
+					   Foreground="#FFFFFF"
+					   FontSize="20"
+					   FontWeight="Bold"
+					   Margin="24,24,24,16"/>
+
+			<!-- アプリ一覧 -->
+			<ListBox Grid.Row="1"
+					 x:Name="AppList"
+					 Background="Transparent"
+					 BorderThickness="0"
+					 Foreground="#FFFFFF"
+					 Margin="24,0,24,0">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Name}"
+								   FontSize="14"
+								   Padding="8,6"/>
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
+
+			<!-- アプリ追加ボタン -->
+			<Button Grid.Row="2"
+					x:Name="AddAppButton"
+					Content="＋ アプリを追加"
+					Background="Transparent"
+					Foreground="#888888"
+					BorderThickness="0"
+					FontSize="13"
+					Cursor="Hand"
+					HorizontalAlignment="Left"
+					Margin="24,0,0,0"
+					IsEnabled="False"
+					Click="AddApp_Click"/>
+		</Grid>
 
     </Grid>
 </Window>

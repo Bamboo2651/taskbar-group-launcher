@@ -35,5 +35,37 @@ namespace TaskbarLauncher
                 _configManager.SaveGroups(new List<GroupConfig>(Groups));
             }
         }
+
+        private void GroupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        {
+            if (GroupList.SelectedItem is GroupConfig selected)
+            {
+                GroupTitle.Text = selected.Name;
+                AppList.ItemsSource = selected.Apps;
+                AddAppButton.IsEnabled = true;
+            }
+        }
+
+        private void AddApp_Click(object sender, RoutedEventArgs e)
+        {
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "アプリを選択",
+                Filter = "実行ファイル (*.exe)|*.exe",
+                Multiselect = false
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                if (GroupList.SelectedItem is GroupConfig selected)
+                {
+                    var appName = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName);
+                    selected.Apps.Add(new AppConfig { Name = appName, Path = dialog.FileName });
+                    AppList.ItemsSource = null;
+                    AppList.ItemsSource = selected.Apps;
+                    _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                }
+            }
+        }
     }
 }
