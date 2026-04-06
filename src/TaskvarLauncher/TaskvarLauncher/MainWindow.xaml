@@ -12,70 +12,77 @@
         WindowStartupLocation="CenterScreen"
         Background="#1E1E2E">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="250" MinWidth="150" MaxWidth="400"/>
+			<ColumnDefinition Width="4"/>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
 
-        <!-- サイドバー -->
-        <Grid Grid.Column="0" Background="#17172A">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="60"/>
-            </Grid.RowDefinitions>
+		<!-- サイドバー -->
+		<Grid Grid.Column="0" Background="#17172A">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="60"/>
+			</Grid.RowDefinitions>
 
-            <!-- グループ一覧エリア（後で実装） -->
-            <!-- グループ一覧 -->
-            <Grid Grid.Row="0">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="48"/>
-                </Grid.RowDefinitions>
+			<!-- グループ一覧 -->
+			<Grid Grid.Row="0">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+					<RowDefinition Height="48"/>
+				</Grid.RowDefinitions>
 
-                <ListBox Grid.Row="0"
-				     x:Name="GroupList"
-                     ItemsSource="{Binding Groups}"
-                     Background="Transparent"
-                     BorderThickness="0"
-                     Foreground="#FFFFFF"
-				     SelectionChanged="GroupList_SelectionChanged"
-						 >
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}" 
-                           FontSize="14"
-                           Padding="8,6"
-						   TextTrimming="CharacterEllipsis"
-						   MaxWidth="200"/>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+				<ListBox Grid.Row="0"
+                         x:Name="GroupList"
+                         ItemsSource="{Binding Groups}"
+                         Background="Transparent"
+                         BorderThickness="0"
+                         Foreground="#FFFFFF"
+                         SelectionChanged="GroupList_SelectionChanged"
+						 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<TextBlock Text="{Binding Name}"
+                                       FontSize="14"
+                                       Padding="8,6"
+                                       TextTrimming="CharacterEllipsis"
+                                       HorizontalAlignment="Stretch"/>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
 
-                <!-- 新規グループ追加ボタン -->
-                <Button Grid.Row="1"
-            Content="＋ 新規グループ"
-            Background="Transparent"
-            Foreground="#888888"
-            BorderThickness="0"
-            FontSize="13"
-            Cursor="Hand"
-            Click="AddGroup_Click"/>
-            </Grid>
+				<!-- 新規グループ追加ボタン -->
+				<Button Grid.Row="1"
+                        Content="＋ 新規グループ"
+                        Background="Transparent"
+                        Foreground="#888888"
+                        BorderThickness="0"
+                        FontSize="13"
+                        Cursor="Hand"
+                        Click="AddGroup_Click"/>
+			</Grid>
 
-            <!-- 歯車ボタン -->
-            <Button Grid.Row="1"
+			<!-- 歯車ボタン -->
+			<Button Grid.Row="1"
                     Content="設定"
                     Background="Transparent"
                     Foreground="#888888"
                     BorderThickness="0"
                     FontSize="14"
                     Cursor="Hand"/>
-        </Grid>
+		</Grid>
 
-        <!-- メインコンテンツ -->
+		<!-- スプリッター -->
+		<GridSplitter Grid.Column="1"
+                      Width="4"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Stretch"
+                      Background="#2D2D3E"
+                      Cursor="SizeWE"/>
+
 		<!-- メインコンテンツ -->
-		<Grid Grid.Column="1">
+		<Grid Grid.Column="2">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="*"/>
@@ -84,43 +91,43 @@
 
 			<!-- グループ名 -->
 			<TextBlock Grid.Row="0"
-					   x:Name="GroupTitle"
-					   Text="グループを選択してください"
-					   Foreground="#FFFFFF"
-					   FontSize="20"
-					   FontWeight="Bold"
-					   Margin="24,24,24,16"/>
+                       x:Name="GroupTitle"
+                       Text="グループを選択してください"
+                       Foreground="#FFFFFF"
+                       FontSize="20"
+                       FontWeight="Bold"
+                       Margin="24,24,24,16"/>
 
 			<!-- アプリ一覧 -->
 			<ListBox Grid.Row="1"
-					 x:Name="AppList"
-					 Background="Transparent"
-					 BorderThickness="0"
-					 Foreground="#FFFFFF"
-					 Margin="24,0,24,0">
+                     x:Name="AppList"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Foreground="#FFFFFF"
+                     Margin="24,0,24,0">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<TextBlock Text="{Binding Name}"
-								   FontSize="14"
-								   Padding="8,6"/>
+                                   FontSize="14"
+                                   Padding="8,6"/>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
 
 			<!-- アプリ追加ボタン -->
 			<Button Grid.Row="2"
-					x:Name="AddAppButton"
-					Content="＋ アプリを追加"
-					Background="Transparent"
-					Foreground="#888888"
-					BorderThickness="0"
-					FontSize="13"
-					Cursor="Hand"
-					HorizontalAlignment="Left"
-					Margin="24,0,0,0"
-					IsEnabled="False"
-					Click="AddApp_Click"/>
+                    x:Name="AddAppButton"
+                    Content="＋ アプリを追加"
+                    Background="Transparent"
+                    Foreground="#888888"
+                    BorderThickness="0"
+                    FontSize="13"
+                    Cursor="Hand"
+                    HorizontalAlignment="Left"
+                    Margin="24,0,0,0"
+                    IsEnabled="False"
+                    Click="AddApp_Click"/>
 		</Grid>
 
-    </Grid>
+	</Grid>
 </Window>
