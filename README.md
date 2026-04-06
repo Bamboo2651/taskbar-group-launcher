@@ -151,14 +151,39 @@ stackbar/
 - `ShowDialog()`でダイアログを開き、`DialogResult`で結果を受け取る
 - namespaceはプロジェクト内で統一しないとエラーになる
 
+---
+
+### 2026-04-06
+
+**今日やったこと**
+
+- グループ選択時にメインコンテンツエリアにアプリ一覧を表示する機能を実装
+- アプリ追加機能を実装（ファイル選択ダイアログでexeを選択）
+- サイドバーの幅をドラッグで変えられるGridSplitterを実装
+- グループ名が長いときにサイドバーの幅に合わせて省略表示（TextTrimming）
+- 横スクロールバーを非表示に（ScrollViewer.HorizontalScrollBarVisibility）
+
+**今日学んだこと**
+
+- `SelectionChanged`イベントでListBoxの選択変更を検知できる
+- `SelectedItem is GroupConfig selected`でキャスト（型変換）と取得を同時にできる
+- `OpenFileDialog`でWindowsのファイル選択ダイアログを呼び出せる
+- `Path.GetFileNameWithoutExtension()`でファイル名から拡張子を除去できる
+- `ItemsSource = null`してから再セットすることでListBoxの表示を強制更新できる
+- `GridSplitter`を使うとドラッグでパネルの幅を変えられる
+- `GridSplitter`は外側のGridの直接の子要素に置く必要がある（入れ子のGridに入れると動かない）
+- `TextTrimming="CharacterEllipsis"`で長いテキストを`...`で省略できる
+- `ScrollViewer.HorizontalScrollBarVisibility="Disabled"`で横スクロールバーを消せる
+- `MinWidth`・`MaxWidth`でサイドバーのリサイズ範囲を制限できる
+
 **次回やること**
 
-- グループを選択したときにメインコンテンツエリアにアプリ一覧を表示する
-- アプリをグループに追加する機能を作る（ファイル選択ダイアログ）
 - グループの削除機能を作る
+- アプリのアイコンをexeから取得して表示する
+- アプリの削除・移動機能を作る（右クリックメニュー）
 
 ---
 
 ## 作者
 
-ひろや — IT専門学校
+ひろや — HAL Tokyo IT専門学校
