@@ -8,8 +8,6 @@ namespace TaskbarLauncher
         {
             base.OnStartup(e);
 
-            MessageBox.Show($"引数の数: {e.Args.Length}\n引数: {string.Join(", ", e.Args)}");
-
             // 引数を確認する
             string[] args = e.Args;
 
