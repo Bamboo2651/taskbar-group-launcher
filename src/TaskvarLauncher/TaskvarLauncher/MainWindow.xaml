@@ -110,6 +110,12 @@
                      BorderThickness="0"
                      Foreground="#FFFFFF"
                      Margin="24,0,24,0">
+				<ListBox.ContextMenu>
+					<ContextMenu>
+						<MenuItem Header="このグループから外す" Click="RemoveApp_Click"/>
+						<MenuItem Header="別のグループに移動" Click="MoveApp_Click"/>
+					</ContextMenu>
+				</ListBox.ContextMenu>
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<StackPanel Orientation="Horizontal" Margin="4,4">

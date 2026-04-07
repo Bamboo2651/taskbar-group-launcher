@@ -57,6 +57,48 @@ namespace TaskbarLauncher
             }
         }
 
+        private void RemoveApp_Click(object sender, RoutedEventArgs e)
+        {
+            if (AppList.SelectedItem is AppConfig selectedApp &&
+                GroupList.SelectedItem is GroupConfig selectedGroup)
+            {
+                selectedGroup.Apps.Remove(selectedApp);
+                AppList.ItemsSource = null;
+                AppList.ItemsSource = selectedGroup.Apps;
+                _configManager.SaveGroups(new List<GroupConfig>(Groups));
+            }
+        }
+
+        private void MoveApp_Click(object sender, RoutedEventArgs e)
+        {
+            if (AppList.SelectedItem is AppConfig selectedApp &&
+                GroupList.SelectedItem is GroupConfig currentGroup)
+            {
+                var otherGroups = Groups.Where(g => g != currentGroup).ToList();
+
+                if (otherGroups.Count == 0)
+                {
+                    MessageBox.Show(
+                        "移動先のグループがありません。\n先に別のグループを作成してください。",
+                        "移動できません",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+
+                var dialog = new MoveAppDialog(otherGroups);
+                dialog.Owner = this;
+                if (dialog.ShowDialog() == true && dialog.SelectedGroup != null)
+                {
+                    currentGroup.Apps.Remove(selectedApp);
+                    dialog.SelectedGroup.Apps.Add(selectedApp);
+                    AppList.ItemsSource = null;
+                    AppList.ItemsSource = currentGroup.Apps;
+                    _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                }
+            }
+        }
+
         private void GroupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (GroupList.SelectedItem is GroupConfig selected)
