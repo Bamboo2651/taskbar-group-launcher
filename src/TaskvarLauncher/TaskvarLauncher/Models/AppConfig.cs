@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Interop;
 using System.Windows.Media.Imaging;
+using System.Text.Json.Serialization;
 
 namespace TaskbarLauncher.Models
 {
@@ -10,7 +11,7 @@ namespace TaskbarLauncher.Models
     {
         public string Name { get; set; } = "";
         public string Path { get; set; } = "";
-
+        [JsonIgnore]
         public BitmapSource? Icon
         {
             get
