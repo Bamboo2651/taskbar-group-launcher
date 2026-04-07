@@ -9,11 +9,15 @@
         ResizeMode="NoResize"
         Topmost="True"
         ShowInTaskbar="False"
-        Background="#1E1E2E"
+        Background="Transparent"
+        AllowsTransparency="True"
+        SizeToContent="WidthAndHeight"
         Deactivated="Window_Deactivated"
-        Loaded="Window_Loaded"
-        WindowStartupLocation="CenterScreen">
+        Loaded="Window_Loaded">
     <Grid>
+        <Grid.Background>
+            <SolidColorBrush Color="#1E1E2E" Opacity="0.85"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -21,16 +25,18 @@
 
         <!-- グループ名 -->
         <TextBlock Grid.Row="0"
-                   x:Name="GroupTitle"
-                   Foreground="#FFFFFF"
-                   FontSize="14"
-                   FontWeight="Bold"
-                   Margin="12,12,12,8"/>
+               x:Name="GroupTitle"
+               Foreground="#FFFFFF"
+               FontSize="14"
+               FontWeight="Bold"
+               Margin="12,12,12,8"
+               HorizontalAlignment="Center"
+               TextAlignment="Center"/>
 
         <!-- アプリ一覧 -->
         <ItemsControl Grid.Row="1"
-                      x:Name="AppItemsControl"
-                      Margin="8,0,8,8">
+                  x:Name="AppItemsControl"
+                  Margin="8,0,8,8">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Horizontal"/>
@@ -39,22 +45,22 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Button Background="Transparent"
-                            BorderThickness="0"
-                            Cursor="Hand"
-                            Margin="4"
-                            Click="AppButton_Click"
-                            Tag="{Binding Path}">
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        Margin="4"
+                        Click="AppButton_Click"
+                        Tag="{Binding Path}">
                         <StackPanel Width="64" HorizontalAlignment="Center">
                             <Image Source="{Binding Icon}"
-                                   Width="32"
-                                   Height="32"
-                                   HorizontalAlignment="Center"/>
+                               Width="32"
+                               Height="32"
+                               HorizontalAlignment="Center"/>
                             <TextBlock Text="{Binding Name}"
-                                       Foreground="#FFFFFF"
-                                       FontSize="11"
-                                       TextAlignment="Center"
-                                       TextTrimming="CharacterEllipsis"
-                                       Margin="0,4,0,0"/>
+                                   Foreground="#FFFFFF"
+                                   FontSize="11"
+                                   TextAlignment="Center"
+                                   TextTrimming="CharacterEllipsis"
+                                   Margin="0,4,0,0"/>
                         </StackPanel>
                     </Button>
                 </DataTemplate>
