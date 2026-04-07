@@ -94,14 +94,27 @@
 				<RowDefinition Height="60"/>
 			</Grid.RowDefinitions>
 
-			<!-- グループ名 -->
-			<TextBlock Grid.Row="0"
-                       x:Name="GroupTitle"
-                       Text="グループを選択してください"
-                       Foreground="#FFFFFF"
-                       FontSize="20"
-                       FontWeight="Bold"
-                       Margin="24,24,24,16"/>
+			<!-- グループ名・ショートカット作成 -->
+			<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="24,24,24,16">
+				<TextBlock x:Name="GroupTitle"
+						   Text="グループを選択してください"
+						   Foreground="#FFFFFF"
+						   FontSize="20"
+						   FontWeight="Bold"
+						   VerticalAlignment="Center"/>
+				<Button x:Name="CreateShortcutButton"
+						Content="タスクバーにピン留め用ショートカットを作成"
+						Background="#5865F2"
+						Foreground="#FFFFFF"
+						BorderThickness="0"
+						FontSize="12"
+						Padding="12,6"
+						Margin="16,0,0,0"
+						Cursor="Hand"
+						IsEnabled="False"
+						VerticalAlignment="Center"
+						Click="CreateShortcut_Click"/>
+			</StackPanel>
 
 			<!-- アプリ一覧 -->
 			<ListBox Grid.Row="1"

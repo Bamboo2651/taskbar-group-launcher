@@ -99,6 +99,19 @@ namespace TaskbarLauncher
             }
         }
 
+        private void CreateShortcut_Click(object sender, RoutedEventArgs e)
+        {
+            if (GroupList.SelectedItem is GroupConfig selected)
+            {
+                _configManager.CreateShortcut(selected);
+                MessageBox.Show(
+                    $"デスクトップに「{selected.Name}.lnk」を作成しました。\nそのファイルを純正タスクバーにドラッグしてピン留めしてください。",
+                    "ショートカット作成完了",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+        }
+
         private void GroupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (GroupList.SelectedItem is GroupConfig selected)
@@ -106,6 +119,7 @@ namespace TaskbarLauncher
                 GroupTitle.Text = selected.Name;
                 AppList.ItemsSource = selected.Apps;
                 AddAppButton.IsEnabled = true;
+                CreateShortcutButton.IsEnabled = true;
             }
         }
 
