@@ -1,0 +1,62 @@
+<Window x:Class="TaskbarLauncher.PopupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="StackBar"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Background="#1E1E2E"
+        Deactivated="Window_Deactivated">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- グループ名 -->
+        <TextBlock Grid.Row="0"
+                   x:Name="GroupTitle"
+                   Foreground="#FFFFFF"
+                   FontSize="14"
+                   FontWeight="Bold"
+                   Margin="12,12,12,8"/>
+
+        <!-- アプリ一覧 -->
+        <ItemsControl Grid.Row="1"
+                      x:Name="AppItemsControl"
+                      Margin="8,0,8,8">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Background="Transparent"
+                            BorderThickness="0"
+                            Cursor="Hand"
+                            Margin="4"
+                            Click="AppButton_Click"
+                            Tag="{Binding Path}">
+                        <StackPanel Width="64" HorizontalAlignment="Center">
+                            <Image Source="{Binding Icon}"
+                                   Width="32"
+                                   Height="32"
+                                   HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding Name}"
+                                       Foreground="#FFFFFF"
+                                       FontSize="11"
+                                       TextAlignment="Center"
+                                       TextTrimming="CharacterEllipsis"
+                                       Margin="0,4,0,0"/>
+                        </StackPanel>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</Window>

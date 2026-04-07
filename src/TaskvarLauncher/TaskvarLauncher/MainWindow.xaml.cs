@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
 using TaskbarLauncher.Models;
+using System.Windows.Controls;
 
 namespace TaskbarLauncher
 {

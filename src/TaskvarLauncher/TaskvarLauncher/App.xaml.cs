@@ -1,14 +1,31 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using System.Windows;
 
-namespace TaskvarLauncher
+namespace TaskbarLauncher
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
-    }
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
 
+            MessageBox.Show($"引数の数: {e.Args.Length}\n引数: {string.Join(", ", e.Args)}");
+
+            // 引数を確認する
+            string[] args = e.Args;
+
+            if (args.Length >= 2 && args[0] == "--group")
+            {
+                // グループIDが渡された場合はポップアップを表示
+                string groupId = args[1];
+                var popup = new PopupWindow(groupId);
+                popup.Show();
+            }
+            else
+            {
+                // 引数がない場合は設定アプリを表示
+                var main = new MainWindow();
+                main.Show();
+            }
+        }
+    }
 }
