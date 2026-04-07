@@ -125,99 +125,15 @@ C:\Users\ユーザー名\AppData\Roaming\StackBar\groups.json
 
 ## 学習ログ
 
-### 2025-04-05
-
-**今日やったこと**
-
-- WPFプロジェクトの初期作成
-- 設定アプリのウィンドウ基本スタイル設定
-- 設定アプリのレイアウト骨格作成（サイドバー＋メインコンテンツ）
-- GroupConfig・AppConfigモデルの作成
-- ConfigManagerの作成（JSONの読み書き）
-- InputDialogの自作（グループ名入力ダイアログ）
-- グループ追加機能の実装
-- バリデーションの実装（空のグループ名を弾く）
-
-**今日学んだこと**
-
-- WPFはUIとロジックが分離されている（`.xaml`が見た目、`.xaml.cs`が動き）
-- `Grid`の`ColumnDefinitions`と`RowDefinitions`でレイアウトを組む
-- `ObservableCollection`を使うとリストの変更がUIに自動反映される
-- `DataContext = this`でXAMLからC#のプロパティを参照できる（データバインディング）
-- `{Binding Name}`でC#のプロパティをXAMLに繋げる
-- `JsonSerializer`でC#のクラスとJSONを相互変換できる
-- アプリの設定ファイルは`AppData/Roaming`に保存するのがWindowsの作法
-- `string.IsNullOrWhiteSpace()`で空文字・スペースのバリデーションができる
-- `ShowDialog()`でダイアログを開き、`DialogResult`で結果を受け取る
-- namespaceはプロジェクト内で統一しないとエラーになる
-
+### [2025-04-05](./docs/2025-04-05.md)
 ---
 
-### 2026-04-06
-
-**今日やったこと**
-
-- グループ選択時にメインコンテンツエリアにアプリ一覧を表示する機能を実装
-- アプリ追加機能を実装（ファイル選択ダイアログでexeを選択）
-- サイドバーの幅をドラッグで変えられるGridSplitterを実装
-- グループ名が長いときにサイドバーの幅に合わせて省略表示（TextTrimming）
-- 横スクロールバーを非表示に（ScrollViewer.HorizontalScrollBarVisibility）
-
-**今日学んだこと**
-
-- `SelectionChanged`イベントでListBoxの選択変更を検知できる
-- `SelectedItem is GroupConfig selected`でキャスト（型変換）と取得を同時にできる
-- `OpenFileDialog`でWindowsのファイル選択ダイアログを呼び出せる
-- `Path.GetFileNameWithoutExtension()`でファイル名から拡張子を除去できる
-- `ItemsSource = null`してから再セットすることでListBoxの表示を強制更新できる
-- `GridSplitter`を使うとドラッグでパネルの幅を変えられる
-- `GridSplitter`は外側のGridの直接の子要素に置く必要がある（入れ子のGridに入れると動かない）
-- `TextTrimming="CharacterEllipsis"`で長いテキストを`...`で省略できる
-- `ScrollViewer.HorizontalScrollBarVisibility="Disabled"`で横スクロールバーを消せる
-- `MinWidth`・`MaxWidth`でサイドバーのリサイズ範囲を制限できる
-
+### [2025-04-06](./docs/2026-04-06.md)
 ---
 
-### 2026-04-07
-
-**今日やったこと**
-
-- グループの削除機能を実装（空でないと削除できない安全設計）
-- アプリのアイコンをexeから自動取得して表示する機能を実装
-- アプリの削除機能を実装（右クリックメニュー）
-- アプリの別グループへの移動機能を実装（MoveAppDialogを自作）
-- GroupConfigにGUIDベースのIDを追加
-- PowerShellを使ったショートカット作成機能を実装
-- App.xamlのStartupUriを削除してOnStartupで起動制御に変更
-- タスクバーのショートカットからポップアップウィンドウを起動する仕組みを実装
-- ポップアップウィンドウの基本UIを実装（アイコン・アプリ名・グループ名）
-- ポップアップの位置をタスクバーの上に固定
-- ポップアップの半透明デザインを実装
-
-**今日学んだこと**
-
-- `ContextMenu`と`MenuItem`で右クリックメニューを実装できる
-- `Icon.ExtractAssociatedIcon()`でexeからアイコンを取得できる
-- `[JsonIgnore]`をつけるとJSONの保存対象から除外できる
-- `Imaging.CreateBitmapSourceFromHIcon()`でアイコンをWPFで使える形式に変換できる
-- `Guid.NewGuid().ToString()`で一意なIDを生成できる
-- PowerShellの`New-Object -ComObject WScript.Shell`でショートカットを作成できる
-- `StartupUri`を削除して`OnStartup`をオーバーライドすると起動時の処理を制御できる
-- `e.Args`で起動時の引数を取得できる
-- `SizeToContent="WidthAndHeight"`でウィンドウを中身に合わせて自動サイズにできる
-- `SystemParameters.WorkArea.Height`でタスクバーを除いた画面の高さを取得できる
-- ビルドしないと古いexeが実行されるため、コード変更後は必ずビルドが必要
-- `System.Windows.Forms`と`System.Windows`を同時に使うと名前が競合してエラーになる
-- Windows 11の新しいバージョンではDWM APIのAcrylic効果が効かない場合がある
-
-**次回やること**
-
-- ポップアップのデザインをさらに改善する
-- タスクトレイ常駐機能を実装する
-- アプリの並び替え（ドラッグ&ドロップ）を実装する
-
+### [2025-04-07](./docs/2026-04-07.md)
 ---
 
 ## 作者
 
-ひろや — HAL Tokyo IT専門学校
+ひろや —  IT専門学校
