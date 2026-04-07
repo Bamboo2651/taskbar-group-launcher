@@ -10,7 +10,9 @@
         Topmost="True"
         ShowInTaskbar="False"
         Background="#1E1E2E"
-        Deactivated="Window_Deactivated">
+        Deactivated="Window_Deactivated"
+        Loaded="Window_Loaded"
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>

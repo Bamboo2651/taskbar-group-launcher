@@ -1,7 +1,8 @@
 using System.Diagnostics;
 using System.Windows;
-using TaskbarLauncher.Models;
 using System.Windows.Controls;
+using System.Windows.Input;
+using TaskbarLauncher.Models;
 
 namespace TaskbarLauncher
 {
@@ -28,19 +29,15 @@ namespace TaskbarLauncher
 
             GroupTitle.Text = group.Name;
             AppItemsControl.ItemsSource = group.Apps;
-
-            PositionWindow();
         }
 
-        private void PositionWindow()
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double screenWidth = SystemParameters.PrimaryScreenWidth;
-            double screenHeight = SystemParameters.PrimaryScreenHeight;
-
-            UpdateLayout();
+            double workAreaHeight = SystemParameters.WorkArea.Height;
 
             Left = (screenWidth / 2) - (ActualWidth / 2);
-            Top = screenHeight - ActualHeight - 48;
+            Top = workAreaHeight - ActualHeight;
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
