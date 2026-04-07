@@ -34,20 +34,25 @@
 				</Grid.RowDefinitions>
 
 				<ListBox Grid.Row="0"
-                         x:Name="GroupList"
-                         ItemsSource="{Binding Groups}"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         Foreground="#FFFFFF"
-                         SelectionChanged="GroupList_SelectionChanged"
-						 ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+         x:Name="GroupList"
+         ItemsSource="{Binding Groups}"
+         Background="Transparent"
+         BorderThickness="0"
+         Foreground="#FFFFFF"
+         SelectionChanged="GroupList_SelectionChanged"
+         ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+					<ListBox.ContextMenu>
+						<ContextMenu>
+							<MenuItem Header="削除" Click="DeleteGroup_Click"/>
+						</ContextMenu>
+					</ListBox.ContextMenu>
 					<ListBox.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding Name}"
-                                       FontSize="14"
-                                       Padding="8,6"
-                                       TextTrimming="CharacterEllipsis"
-                                       HorizontalAlignment="Stretch"/>
+									   FontSize="14"
+									   Padding="8,6"
+									   TextTrimming="CharacterEllipsis"
+									   HorizontalAlignment="Stretch"/>
 						</DataTemplate>
 					</ListBox.ItemTemplate>
 				</ListBox>

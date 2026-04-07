@@ -35,6 +35,27 @@ namespace TaskbarLauncher
                 _configManager.SaveGroups(new List<GroupConfig>(Groups));
             }
         }
+        private void DeleteGroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (GroupList.SelectedItem is GroupConfig selected)
+            {
+                if (selected.Apps.Count > 0)
+                {
+                    MessageBox.Show(
+                        "グループにアプリが残っています。\n先にアプリをすべて削除してください。",
+                        "削除できません",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                    return;
+                }
+
+                Groups.Remove(selected);
+                GroupTitle.Text = "グループを選択してください";
+                AppList.ItemsSource = null;
+                AddAppButton.IsEnabled = false;
+                _configManager.SaveGroups(new List<GroupConfig>(Groups));
+            }
+        }
 
         private void GroupList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
