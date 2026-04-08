@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Text.Json;
-using TaskbarLauncher.Models;
 using System.Windows;
+using TaskbarLauncher.Models;
+using MessageBox = System.Windows.MessageBox;
 
 namespace TaskbarLauncher
 {
@@ -11,6 +15,10 @@ namespace TaskbarLauncher
         private static readonly string ConfigPath =
             Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "StackBar", "groups.json");
+
+        private static readonly string IconCacheDir =
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "StackBar", "icons");
 
         public List<GroupConfig> LoadGroups()
         {
@@ -31,14 +39,136 @@ namespace TaskbarLauncher
             File.WriteAllText(ConfigPath, json);
         }
 
+        // アプリのアイコン画像を取得する
+        private Bitmap? GetAppIcon(string exePath)
+        {
+            try
+            {
+                var icon = System.Drawing.Icon.ExtractAssociatedIcon(exePath);
+                return icon?.ToBitmap();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        // グループ内のアプリアイコンを合成して .ico ファイルを生成する
+        public string? CreateGroupIcon(GroupConfig group)
+        {
+            if (!Directory.Exists(IconCacheDir))
+                Directory.CreateDirectory(IconCacheDir);
+
+            // アプリのパスリストを取得（最大4個）
+            var apps = group.Apps;
+            var bitmaps = new List<Bitmap>();
+
+            foreach (var app in apps)
+            {
+                if (bitmaps.Count >= 4) break;
+                var bmp = GetAppIcon(app.Path);
+                if (bmp != null)
+                    bitmaps.Add(bmp);
+            }
+
+            if (bitmaps.Count == 0)
+                return null;
+
+            // 256×256の合成画像を作る
+            int size = 256;
+            var canvas = new Bitmap(size, size);
+            using var g = Graphics.FromImage(canvas);
+            g.Clear(Color.Transparent);
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+
+            // アプリ数に応じてレイアウトを変える
+            int count = bitmaps.Count;
+            if (count == 1)
+            {
+                // 1個：中央に大きく
+                g.DrawImage(bitmaps[0], 32, 32, 192, 192);
+            }
+            else if (count == 2)
+            {
+                // 2個：左右に並べる
+                g.DrawImage(bitmaps[0], 8, 64, 112, 112);
+                g.DrawImage(bitmaps[1], 136, 64, 112, 112);
+            }
+            else
+            {
+                // 3〜4個：2×2グリッド
+                int cell = 112;
+                int padding = 8;
+                int[] xs = { padding, size / 2 + padding / 2 };
+                int[] ys = { padding, size / 2 + padding / 2 };
+
+                for (int i = 0; i < Math.Min(count, 4); i++)
+                {
+                    int col = i % 2;
+                    int row = i / 2;
+                    g.DrawImage(bitmaps[i], xs[col], ys[row], cell, cell);
+                }
+            }
+
+            // .ico ファイルとして保存
+            string icoPath = Path.Combine(IconCacheDir, $"{group.Id}.ico");
+            SaveAsIco(canvas, icoPath);
+
+            // 使い終わったBitmapを解放
+            foreach (var bmp in bitmaps)
+                bmp.Dispose();
+            canvas.Dispose();
+
+            return icoPath;
+        }
+
+        // Bitmap を .ico ファイルとして保存する
+        private void SaveAsIco(Bitmap bitmap, string path)
+        {
+            // 256×256 に縮小
+            using var resized = new Bitmap(bitmap, new System.Drawing.Size(256, 256));
+            using var ms = new MemoryStream();
+            resized.Save(ms, ImageFormat.Png);
+            byte[] pngData = ms.ToArray();
+
+            using var fs = new FileStream(path, FileMode.Create);
+            using var writer = new BinaryWriter(fs);
+
+            // ICO ヘッダー
+            writer.Write((short)0);       // 予約
+            writer.Write((short)1);       // タイプ: アイコン
+            writer.Write((short)1);       // 画像の数: 1枚
+
+            // 画像ディレクトリエントリ
+            writer.Write((byte)0);        // 幅 (0 = 256)
+            writer.Write((byte)0);        // 高さ (0 = 256)
+            writer.Write((byte)0);        // カラーパレット数
+            writer.Write((byte)0);        // 予約
+            writer.Write((short)1);       // カラープレーン数
+            writer.Write((short)32);      // ビット深度
+            writer.Write(pngData.Length); // データサイズ
+            writer.Write(22);             // データの開始位置（ヘッダー6 + エントリ16 = 22）
+
+            // PNG データ本体
+            writer.Write(pngData);
+        }
+
         public void CreateShortcut(GroupConfig group)
         {
             string exePath = System.Reflection.Assembly.GetExecutingAssembly().Location
                 .Replace(".dll", ".exe");
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string shortcutPath = System.IO.Path.Combine(desktopPath, $"{group.Name}.lnk");
+            string shortcutPath = Path.Combine(desktopPath, $"{group.Name}.lnk");
 
-            string script = $@"$shell = New-Object -ComObject WScript.Shell; $shortcut = $shell.CreateShortcut('{shortcutPath}'); $shortcut.TargetPath = '{exePath}'; $shortcut.Arguments = '--group {group.Id}'; $shortcut.Description = 'StackBar - {group.Name}'; $shortcut.Save()";
+            // グループアイコンを生成
+            string? icoPath = CreateGroupIcon(group);
+
+            // アイコン指定の部分（生成できた場合のみ追加）
+            string iconLine = icoPath != null
+                ? $"$shortcut.IconLocation = '{icoPath},0'; "
+                : "";
+
+            string script = $@"$shell = New-Object -ComObject WScript.Shell; $shortcut = $shell.CreateShortcut('{shortcutPath}'); $shortcut.TargetPath = '{exePath}'; $shortcut.Arguments = '--group {group.Id}'; $shortcut.Description = 'StackBar - {group.Name}'; {iconLine}$shortcut.Save()";
 
             var process = new System.Diagnostics.Process
             {

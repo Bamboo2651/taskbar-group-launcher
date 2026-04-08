@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Windows;
 using TaskbarLauncher.Models;
+using MessageBox = System.Windows.MessageBox;
 
 namespace TaskbarLauncher
 {

@@ -2,6 +2,7 @@
 using System.Windows;
 using TaskbarLauncher.Models;
 using System.Windows.Controls;
+using MessageBox = System.Windows.MessageBox;
 
 namespace TaskbarLauncher
 {
