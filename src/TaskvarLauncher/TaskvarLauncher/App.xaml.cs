@@ -1,72 +1,137 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using Application = System.Windows.Application;
+using SystemApplication = System.Windows.Application;
 
 namespace TaskbarLauncher
 {
-    public partial class App : Application
+    public partial class App : SystemApplication
     {
-        private NotifyIcon? _notifyIcon;
-
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
 
-            // タスクトレイアイコンを設定
-            _notifyIcon = new NotifyIcon
+            // ========================
+            // 【重要】ここから追加
+            // ========================
+
+            // コマンドライン引数を取得（WPF の e.Args ではなく System 関数を使用）
+            string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray(); // 最初は exe パス なのでスキップ
+
+            // 引数を確認（デバッグ用）
+            System.Diagnostics.Debug.WriteLine($"[App.OnStartup] 引数の数: {args.Length}");
+            for (int i = 0; i < args.Length; i++)
             {
-                Icon = System.Drawing.SystemIcons.Application,
-                Visible = true,
-                Text = "StackBar"
-            };
+                System.Diagnostics.Debug.WriteLine($"[App.OnStartup] Args[{i}]: {args[i]}");
+            }
+
+            // ShutdownMode を設定（タスクトレイのみで常駐）
+            ShutdownMode = ShutdownMode.OnExplicitShutdown;
+
+            // グループを指定して起動した場合
+            bool isGroupLaunch = args.Length >= 2 && args[0] == "--group";
+            string? groupId = null;
+
+            if (isGroupLaunch)
+            {
+                groupId = args[1];
+                System.Diagnostics.Debug.WriteLine($"[App.OnStartup] グループ指定で起動: {groupId}");
+
+                // 常駐中のメインアプリに通知を試みる
+                if (NamedPipeClient.SendGroupIdToRunningInstance(groupId))
+                {
+                    // 通知成功 → この exe は終了
+                    System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリへの通知成功。この exe は終了します");
+                    Shutdown(0);
+                    return;
+                }
+
+                // 通知失敗 → 初回起動（メインアプリはまだ起動していない）
+                System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリが起動していません。初回起動として処理します");
+            }
+
+            // ========================
+            // タスクトレイアイコンの初期化
+            // ========================
+            var notifyIcon = new System.Windows.Forms.NotifyIcon();
+
+            // アイコンファイルを試す、なければデフォルトアイコンを使用
+            try
+            {
+                if (System.IO.File.Exists("taskbar_icon.ico"))
+                {
+                    notifyIcon.Icon = new System.Drawing.Icon("taskbar_icon.ico");
+                }
+                else
+                {
+                    // デフォルトアイコン（システムのアプリケーションアイコン）を使用
+                    notifyIcon.Icon = System.Drawing.SystemIcons.Application;
+                }
+            }
+            catch
+            {
+                // アイコン読み込み失敗時はシステムアイコンを使用
+                notifyIcon.Icon = System.Drawing.SystemIcons.Application;
+            }
+
+            notifyIcon.Visible = true;
+            notifyIcon.Text = "StackBar";
 
             // 右クリックメニュー
-            var contextMenu = new ContextMenuStrip();
-            contextMenu.Items.Add("設定を開く", null, (s, ev) =>
+            var contextMenu = new System.Windows.Forms.ContextMenuStrip();
+            contextMenu.Items.Add("設定を開く", null, (s, ea) =>
             {
-                var main = new MainWindow();
-                main.Show();
-                main.Activate();
+                MainWindow?.Activate();
             });
-            contextMenu.Items.Add("-"); // 区切り線
-            contextMenu.Items.Add("終了", null, (s, ev) =>
+            contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
+            contextMenu.Items.Add("終了", null, (s, ea) =>
             {
-                _notifyIcon.Visible = false;
-                _notifyIcon.Dispose();
                 Shutdown();
             });
+            notifyIcon.ContextMenuStrip = contextMenu;
 
-            _notifyIcon.ContextMenuStrip = contextMenu;
-
-            // ダブルクリックで設定を開く
-            _notifyIcon.DoubleClick += (s, ev) =>
+            // ダブルクリック
+            notifyIcon.DoubleClick += (s, ea) =>
             {
-                var main = new MainWindow();
-                main.Show();
-                main.Activate();
+                MainWindow?.Activate();
             };
 
-            string[] args = e.Args;
-
-            if (args.Length >= 2 && args[0] == "--group")
+            // アプリ終了時にアイコンを削除
+            Exit += (s, ea) =>
             {
-                string groupId = args[1];
+                notifyIcon.Visible = false;
+                notifyIcon.Dispose();
+                NamedPipeServer.StopListening();
+            };
+
+            // ========================
+            // パイプサーバーの起動
+            // ========================
+            NamedPipeServer.StartListening();
+            System.Diagnostics.Debug.WriteLine("[App.OnStartup] パイプサーバーを起動しました");
+
+            // ========================
+            // ウィンドウの表示
+            // ========================
+            if (isGroupLaunch && groupId != null)
+            {
+                // グループ指定で起動 → ポップアップウィンドウを表示
                 var popup = new PopupWindow(groupId);
                 popup.Show();
+                System.Diagnostics.Debug.WriteLine($"[App.OnStartup] ポップアップウィンドウを表示: {groupId}");
             }
             else
             {
-                ShutdownMode = ShutdownMode.OnExplicitShutdown;
-                var main = new MainWindow();
-                main.Show();
+                // 通常起動 → 設定ウィンドウを表示
+                if (MainWindow == null)
+                {
+                    MainWindow = new MainWindow();
+                }
+                MainWindow.Show();
             }
         }
 
-        protected override void OnExit(ExitEventArgs e)
-        {
-            _notifyIcon?.Dispose();
-            base.OnExit(e);
-        }
+        // ... 既存のコード ...
     }
 }
