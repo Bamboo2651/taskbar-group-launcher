@@ -58,6 +58,10 @@ namespace TaskbarLauncher
         {
             if (!Directory.Exists(IconCacheDir))
                 Directory.CreateDirectory(IconCacheDir);
+            // 古いアイコンを削除
+            string oldIcoPath = Path.Combine(IconCacheDir, $"{group.Id}.ico");
+            if (File.Exists(oldIcoPath))
+                File.Delete(oldIcoPath);
 
             // アプリのパスリストを取得（最大4個）
             var apps = group.Apps;
@@ -86,19 +90,19 @@ namespace TaskbarLauncher
             if (count == 1)
             {
                 // 1個：中央に大きく
-                g.DrawImage(bitmaps[0], 32, 32, 192, 192);
+                g.DrawImage(bitmaps[0], 16, 16, 224, 224);
             }
             else if (count == 2)
             {
                 // 2個：左右に並べる
-                g.DrawImage(bitmaps[0], 8, 64, 112, 112);
-                g.DrawImage(bitmaps[1], 136, 64, 112, 112);
+                g.DrawImage(bitmaps[0], 4, 52, 120, 120);
+                g.DrawImage(bitmaps[1], 132, 52, 120, 120);
             }
             else
             {
                 // 3〜4個：2×2グリッド
-                int cell = 112;
-                int padding = 8;
+                int cell = 120;
+                int padding = 4;
                 int[] xs = { padding, size / 2 + padding / 2 };
                 int[] ys = { padding, size / 2 + padding / 2 };
 
@@ -185,6 +189,12 @@ namespace TaskbarLauncher
             process.Start();
             string error = process.StandardError.ReadToEnd();
             process.WaitForExit();
+            // Windowsのアイコンキャッシュをリフレッシュ
+            if (process.ExitCode == 0)
+            {
+                System.Threading.Thread.Sleep(500);
+                SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
+            }
 
             if (process.ExitCode != 0)
             {
@@ -195,5 +205,7 @@ namespace TaskbarLauncher
                     MessageBoxImage.Error);
             }
         }
+    [System.Runtime.InteropServices.DllImport("shell32.dll")]
+        private static extern void SHChangeNotify(int wEventId, int uFlags, IntPtr dwItem1, IntPtr dwItem2);
     }
-}
+    }
