@@ -28,6 +28,30 @@ Windows タスクバーにグループランチャーを追加し、アプリを
 | 設定・管理アプリ | グループの作成・編集・削除、アプリの追加・削除・移動を管理 |
 
 ---
+## フォルダ構成
+```
+taskbar-group-launcher/
+├── README.md
+├── src/
+│   └── TaskbarLauncher/
+│       ├── Models/
+│       │   ├── AppConfig.cs         ← アプリ1つ分のデータ
+│       │   └── GroupConfig.cs       ← グループ1つ分のデータ
+│       ├── ConfigManager.cs         ← JSONの読み書き・ショートカット作成
+│       ├── NamedPipeServer.cs
+│       ├── NamedPipeClient.cs  
+│       ├── InputDialog.xaml         ← テキスト入力ダイアログ
+│       ├── MoveAppDialog.xaml       ← アプリ移動先選択ダイアログ
+│       ├── PopupWindow.xaml         ← ポップアップウィンドウ
+│       ├── MainWindow.xaml          ← 設定アプリのメイン画面
+│       └── App.xaml                 ← 起動時の引数処理
+└── docs/
+    ├── 2025-04-05.md
+    ├── 2026-04-06.md
+    └── 2026-04-07.md
+    └── 2026-04-08.md
+```
+---
 
 ## ✨ 機能一覧
 
