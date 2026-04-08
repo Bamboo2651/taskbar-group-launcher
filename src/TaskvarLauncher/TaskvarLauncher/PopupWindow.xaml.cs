@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
@@ -11,12 +12,11 @@ namespace TaskbarLauncher
 {
     public partial class PopupWindow : Window
     {
-        public PopupWindow(string groupId)
+        // キャッシュ済みグループを受け取るコンストラクタ（新）
+        public PopupWindow(string groupId, List<GroupConfig> groups)
         {
             InitializeComponent();
 
-            var configManager = new ConfigManager();
-            var groups = configManager.LoadGroups();
             var group = groups.Find(g => g.Id == groupId);
 
             if (group == null)
@@ -34,6 +34,9 @@ namespace TaskbarLauncher
             AppItemsControl.ItemsSource = group.Apps;
         }
 
+        private bool _isReady = false;
+        private bool _isClosed = false;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             double screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -41,11 +44,20 @@ namespace TaskbarLauncher
 
             Left = (screenWidth / 2) - (ActualWidth / 2);
             Top = workAreaHeight - ActualHeight;
+
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                _isReady = true;
+            }), System.Windows.Threading.DispatcherPriority.Input);
         }
 
         private void Window_Deactivated(object sender, EventArgs e)
         {
-            Close();
+            if (_isReady && !_isClosed)
+            {
+                _isClosed = true;
+                Close();
+            }
         }
 
         private void AppButton_Click(object sender, RoutedEventArgs e)
@@ -53,6 +65,7 @@ namespace TaskbarLauncher
             if (sender is Button btn && btn.Tag is string path)
             {
                 Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
+                _isClosed = true;
                 Close();
             }
         }
