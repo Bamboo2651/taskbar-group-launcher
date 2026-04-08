@@ -25,20 +25,20 @@ namespace TaskbarLauncher
             bool isGroupLaunch = args.Length >= 2 && args[0] == "--group";
             string? groupId = null;
 
-            if (isGroupLaunch)
-            {
-                groupId = args[1];
-                System.Diagnostics.Debug.WriteLine($"[App.OnStartup] グループ指定で起動: {groupId}");
+            //if (isGroupLaunch)
+            //{
+            //    groupId = args[1];
+            //    System.Diagnostics.Debug.WriteLine($"[App.OnStartup] グループ指定で起動: {groupId}");
 
-                if (NamedPipeClient.SendGroupIdToRunningInstance(groupId))
-                {
-                    System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリへの通知成功。この exe は終了します");
-                    Shutdown(0);
-                    return;
-                }
+            //    if (NamedPipeClient.SendGroupIdToRunningInstance(groupId))
+            //    {
+            //        System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリへの通知成功。この exe は終了します");
+            //        Shutdown(0);
+            //        return;
+            //    }
 
-                System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリが起動していません。初回起動として処理します");
-            }
+            //    System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリが起動していません。初回起動として処理します");
+            //}
 
             // ★ 起動時に1回だけ設定を読み込んでキャッシュする
             var configManager = new ConfigManager();
