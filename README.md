@@ -39,6 +39,7 @@ taskbar-group-launcher/
 │       │   └── GroupConfig.cs       ← グループ1つ分のデータ
 │       ├── ConfigManager.cs         ← JSONの読み書き・ショートカット作成
 │       ├── NamedPipeServer.cs
+│       ├── Program.cs
 │       ├── NamedPipeClient.cs  
 │       ├── InputDialog.xaml         ← テキスト入力ダイアログ
 │       ├── MoveAppDialog.xaml       ← アプリ移動先選択ダイアログ
