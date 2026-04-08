@@ -98,6 +98,10 @@ namespace TaskbarLauncher
             };
 
             popup.Show();
+
+            popup.Topmost = true;
+            popup.Activate();
+            popup.Focus();
             System.Diagnostics.Debug.WriteLine($"[NamedPipeServer] ポップアップ表示: {groupId}");
         }
 

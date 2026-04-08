@@ -83,6 +83,9 @@ namespace TaskbarLauncher
             {
                 var popup = new PopupWindow(groupId, groups);
                 popup.Show();
+                popup.Topmost = true;
+                popup.Activate();
+                popup.Focus();
                 System.Diagnostics.Debug.WriteLine($"[App.OnStartup] ポップアップウィンドウを表示: {groupId}");
             }
             else
