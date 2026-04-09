@@ -62,7 +62,18 @@ namespace TaskbarLauncher
             notifyIcon.Text = "StackBar";
 
             var contextMenu = new System.Windows.Forms.ContextMenuStrip();
-            contextMenu.Items.Add("設定を開く", null, (s, ea) => MainWindow?.Activate());
+            contextMenu.Items.Add("設定を開く", null, (s, ea) =>
+            {
+                if (MainWindow == null || !MainWindow.IsVisible)
+                {
+                    MainWindow = new MainWindow();
+                    MainWindow.Show();
+                }
+                else
+                {
+                    MainWindow.Activate();
+                }
+            });
             contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
             contextMenu.Items.Add("終了", null, (s, ea) => Shutdown());
             notifyIcon.ContextMenuStrip = contextMenu;
