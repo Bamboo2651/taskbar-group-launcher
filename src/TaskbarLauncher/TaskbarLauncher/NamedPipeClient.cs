@@ -60,5 +60,22 @@ namespace TaskbarLauncher
                 return false;
             }
         }
+        public static bool SendMessageToRunningInstance(string message)
+        {
+            try
+            {
+                using (var client = new NamedPipeClientStream(".", PipeName, PipeDirection.Out, PipeOptions.None))
+                {
+                    if (!client.ConnectAsync(TimeoutMs).Wait(TimeoutMs)) return false;
+                    using (var writer = new StreamWriter(client))
+                    {
+                        writer.WriteLine(message);
+                        writer.Flush();
+                    }
+                    return true;
+                }
+            }
+            catch { return false; }
+        }  
     }
 }

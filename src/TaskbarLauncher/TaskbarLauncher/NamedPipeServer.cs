@@ -52,12 +52,28 @@ namespace TaskbarLauncher
                         using (server)
                         using (var reader = new StreamReader(server))
                         {
-                            string groupId = reader.ReadLine();
-                            if (!string.IsNullOrEmpty(groupId))
+                            string message = reader.ReadLine();
+                            if (!string.IsNullOrEmpty(message))
                             {
                                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                                 {
-                                    ShowPopup(groupId);
+                                    if (message == "--open-settings")
+                                    {
+                                        var app = (App)System.Windows.Application.Current;
+                                        if (app.MainWindow == null || !app.MainWindow.IsVisible)
+                                        {
+                                            app.MainWindow = new MainWindow();
+                                            app.MainWindow.Show();
+                                        }
+                                        else
+                                        {
+                                            app.MainWindow.Activate();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        ShowPopup(message);
+                                    }
                                 });
                             }
                         }

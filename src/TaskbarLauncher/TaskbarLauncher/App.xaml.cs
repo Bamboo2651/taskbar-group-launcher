@@ -8,9 +8,19 @@ namespace TaskbarLauncher
 {
     public partial class App : SystemApplication
     {
+        private static Mutex? _mutex;
+
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            _mutex = new Mutex(true, "StackBar_SingleInstance", out bool createdNew);
+            if (!createdNew)
+            {
+                NamedPipeClient.SendMessageToRunningInstance("--open-settings");
+                Shutdown(0);
+                return;
+            }
 
             string[] args = Environment.GetCommandLineArgs().Skip(1).ToArray();
 
