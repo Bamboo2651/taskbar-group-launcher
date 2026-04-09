@@ -8,6 +8,9 @@
 		<UseWPF>true</UseWPF>
 		<UseWindowsForms>true</UseWindowsForms>
 		<StartupObject>TaskbarLauncher.Program</StartupObject>
+		<ApplicationIcon>taskbar_icon.ico</ApplicationIcon>
 	</PropertyGroup>
-
+	<ItemGroup>
+		<Resource Include="taskbar_icon.ico" />
+	</ItemGroup>
 </Project>

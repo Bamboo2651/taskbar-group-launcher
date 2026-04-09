@@ -55,13 +55,13 @@ namespace TaskbarLauncher
             var groups = configManager.LoadGroups();
             NamedPipeServer.SetCachedGroups(groups);
 
-            //タスクトレイアイコンの初期化
+            // タスクトレイアイコンの初期化
             var notifyIcon = new System.Windows.Forms.NotifyIcon();
             try
             {
-                notifyIcon.Icon = System.IO.File.Exists("taskbar_icon.ico")
-                    ? new System.Drawing.Icon("taskbar_icon.ico")
-                    : System.Drawing.SystemIcons.Application;
+                var streamInfo = System.Windows.Application.GetResourceStream(
+                    new Uri("pack://application:,,,/taskbar_icon.ico"));
+                notifyIcon.Icon = new System.Drawing.Icon(streamInfo.Stream);
             }
             catch
             {
