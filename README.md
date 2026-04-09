@@ -114,11 +114,7 @@ taskbar-group-launcher/
 │       ├── PopupWindow.xaml         ← ポップアップウィンドウ
 │       ├── MainWindow.xaml          ← 設定アプリのメイン画面
 │       └── App.xaml                 ← 起動時の引数処理
-└── docs/
-    ├── 2025-04-05.md
-    ├── 2026-04-06.md
-    ├── 2026-04-07.md
-    └── 2026-04-08.md
+└──勉強/
 ```
 
 ---
