@@ -121,6 +121,9 @@
                      x:Name="AppList"
                      Background="Transparent"
                      BorderThickness="0"
+					 AllowDrop="True"
+					 DragOver="AppList_DragOver"
+					 Drop="AppList_Drop"
                      Foreground="#FFFFFF"
                      Margin="24,0,24,0">
 				<ListBox.ContextMenu>

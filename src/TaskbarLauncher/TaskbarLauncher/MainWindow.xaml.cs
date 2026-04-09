@@ -135,16 +135,47 @@ namespace TaskbarLauncher
             };
 
             if (dialog.ShowDialog() == true)
-            {
-                if (GroupList.SelectedItem is GroupConfig selected)
-                {
-                    var appName = System.IO.Path.GetFileNameWithoutExtension(dialog.FileName);
-                    selected.Apps.Add(new AppConfig { Name = appName, Path = dialog.FileName });
-                    AppList.ItemsSource = null;
-                    AppList.ItemsSource = selected.Apps;
-                    _configManager.SaveGroups(new List<GroupConfig>(Groups));
-                }
-            }
+                AddAppFromPath(dialog.FileName);
         }
+
+        private void AddAppFromPath(string path)
+        {
+
+            System.Diagnostics.Debug.WriteLine($"[Drop] path={path}");
+            System.Diagnostics.Debug.WriteLine($"[Drop] IsExe={path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)}");
+            System.Diagnostics.Debug.WriteLine($"[Drop] SelectedGroup={GroupList.SelectedItem}");
+
+            // .lnkならリンク先を解決する
+            if (path.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase))
+            {
+                var shell = (dynamic)Activator.CreateInstance(Type.GetTypeFromProgID("WScript.Shell")!)!;
+                var shortcut = shell.CreateShortcut(path);
+                path = (string)shortcut.TargetPath;
+            }
+
+            if (!path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) return;
+            if (GroupList.SelectedItem is not GroupConfig selected) return;
+
+            var appName = System.IO.Path.GetFileNameWithoutExtension(path);
+            selected.Apps.Add(new AppConfig { Name = appName, Path = path });
+            AppList.ItemsSource = null;
+            AppList.ItemsSource = selected.Apps;
+            _configManager.SaveGroups(new List<GroupConfig>(Groups));
+        }
+
+        private void AppList_DragOver(object sender, System.Windows.DragEventArgs e)
+        {
+            e.Effects = e.Data.GetDataPresent(System.Windows.DataFormats.FileDrop) ? System.Windows.DragDropEffects.Copy : System.Windows.DragDropEffects.None;
+            e.Handled = true;
+        }
+
+        private void AppList_Drop(object sender, System.Windows.DragEventArgs e)
+        {
+            if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is not string[] files) return;
+            foreach (var file in files)
+                AddAppFromPath(file);
+        }
+
+
     }
 }
