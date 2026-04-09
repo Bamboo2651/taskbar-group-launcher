@@ -113,6 +113,7 @@ taskbar-group-launcher/
 │       ├── MoveAppDialog.xaml       ← アプリ移動先選択ダイアログ
 │       ├── PopupWindow.xaml         ← ポップアップウィンドウ
 │       ├── MainWindow.xaml          ← 設定アプリのメイン画面
+│       ├── AssemblyInfo.cs          ← 触らなくていいファイル
 │       └── App.xaml                 ← 起動時の引数処理
 └──勉強/
 ```
@@ -130,6 +131,7 @@ C:\Users\ユーザー名\AppData\Roaming\StackBar\groups.json
 ## 学習
 - [App.xaml](./src/TaskbarLauncher/勉強/App.xaml.md)
 - [App.xaml.cs](./src/TaskbarLauncher/勉強/App.xaml.cs.md)
+- [AssemblyInfo.cs](./src/TaskbarLauncher/勉強/AssemblyInfo.cs.md)
 
 ---
 
