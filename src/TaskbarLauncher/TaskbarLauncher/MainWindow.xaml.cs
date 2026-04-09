@@ -35,6 +35,7 @@ namespace TaskbarLauncher
                 var newGroup = new GroupConfig { Name = dialog.Answer };
                 Groups.Add(newGroup);
                 _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                NamedPipeServer.SetCachedGroups(new List<GroupConfig>(Groups));
             }
         }
         private void DeleteGroup_Click(object sender, RoutedEventArgs e)
@@ -56,6 +57,7 @@ namespace TaskbarLauncher
                 AppList.ItemsSource = null;
                 AddAppButton.IsEnabled = false;
                 _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                NamedPipeServer.SetCachedGroups(new List<GroupConfig>(Groups));
             }
         }
 
@@ -68,6 +70,7 @@ namespace TaskbarLauncher
                 AppList.ItemsSource = null;
                 AppList.ItemsSource = selectedGroup.Apps;
                 _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                NamedPipeServer.SetCachedGroups(new List<GroupConfig>(Groups));
             }
         }
 
@@ -97,6 +100,7 @@ namespace TaskbarLauncher
                     AppList.ItemsSource = null;
                     AppList.ItemsSource = currentGroup.Apps;
                     _configManager.SaveGroups(new List<GroupConfig>(Groups));
+                    NamedPipeServer.SetCachedGroups(new List<GroupConfig>(Groups));
                 }
             }
         }
@@ -151,9 +155,20 @@ namespace TaskbarLauncher
                 var shell = (dynamic)Activator.CreateInstance(Type.GetTypeFromProgID("WScript.Shell")!)!;
                 var shortcut = shell.CreateShortcut(path);
                 path = (string)shortcut.TargetPath;
+                System.Diagnostics.Debug.WriteLine($"[Drop] resolvedPath={path}");
+                System.Diagnostics.Debug.WriteLine($"[Drop] Arguments={shortcut.Arguments}");
+                System.Diagnostics.Debug.WriteLine($"[Drop] Description={shortcut.Description}");
             }
 
-            if (!path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase)) return;
+            if (!path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
+            {
+                System.Windows.MessageBox.Show(
+                    "このアプリは追加できません。\nタスクバーから追加できるのは通常の.exeアプリのみです。",
+                    "追加できません",
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
+                return;
+            }
             if (GroupList.SelectedItem is not GroupConfig selected) return;
 
             var appName = System.IO.Path.GetFileNameWithoutExtension(path);
@@ -161,6 +176,7 @@ namespace TaskbarLauncher
             AppList.ItemsSource = null;
             AppList.ItemsSource = selected.Apps;
             _configManager.SaveGroups(new List<GroupConfig>(Groups));
+            NamedPipeServer.SetCachedGroups(new List<GroupConfig>(Groups));
         }
 
         private void AppList_DragOver(object sender, System.Windows.DragEventArgs e)
