@@ -25,7 +25,7 @@ namespace TaskbarLauncher
             // グループ起動ではない、またはメインアプリが起動していなかった場合は
             // 通常通りWPFアプリケーションを立ち上げる
             var app = new App();
-            app.InitializeComponent();
+            //app.InitializeComponent();
             app.Run();
         }
     }
