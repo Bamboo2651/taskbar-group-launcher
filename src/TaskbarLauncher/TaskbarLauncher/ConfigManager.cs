@@ -39,7 +39,7 @@ namespace TaskbarLauncher
             File.WriteAllText(ConfigPath, json);
         }
 
-        // アプリのアイコン画像を取得する
+        //アプリのアイコン画像を取得する
         private Bitmap? GetAppIcon(string exePath)
         {
             try
@@ -53,17 +53,17 @@ namespace TaskbarLauncher
             }
         }
 
-        // グループ内のアプリアイコンを合成して .ico ファイルを生成する
+        //グループ内のアプリアイコンを合成して .ico ファイルを生成する
         public string? CreateGroupIcon(GroupConfig group)
         {
             if (!Directory.Exists(IconCacheDir))
                 Directory.CreateDirectory(IconCacheDir);
-            // 古いアイコンを削除
+            //古いアイコンを削除
             string oldIcoPath = Path.Combine(IconCacheDir, $"{group.Id}.ico");
             if (File.Exists(oldIcoPath))
                 File.Delete(oldIcoPath);
 
-            // アプリのパスリストを取得（最大4個）
+            //アプリのパスリストを取得（最大4個）
             var apps = group.Apps;
             var bitmaps = new List<Bitmap>();
 
@@ -78,29 +78,29 @@ namespace TaskbarLauncher
             if (bitmaps.Count == 0)
                 return null;
 
-            // 256×256の合成画像を作る
+            //256×256の合成画像を作る
             int size = 256;
             var canvas = new Bitmap(size, size);
             using var g = Graphics.FromImage(canvas);
             g.Clear(Color.Transparent);
             g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
 
-            // アプリ数に応じてレイアウトを変える
+            //アプリ数に応じてレイアウトを変える
             int count = bitmaps.Count;
             if (count == 1)
             {
-                // 1個：中央に大きく
+                //1個：中央に大きく
                 g.DrawImage(bitmaps[0], 16, 16, 224, 224);
             }
             else if (count == 2)
             {
-                // 2個：左右に並べる
+                //2個：左右に並べる
                 g.DrawImage(bitmaps[0], 4, 52, 120, 120);
                 g.DrawImage(bitmaps[1], 132, 52, 120, 120);
             }
             else
             {
-                // 3〜4個：2×2グリッド
+                //3〜4個：2×2グリッド
                 int cell = 120;
                 int padding = 4;
                 int[] xs = { padding, size / 2 + padding / 2 };
@@ -114,11 +114,11 @@ namespace TaskbarLauncher
                 }
             }
 
-            // .ico ファイルとして保存
+            //.ico ファイルとして保存
             string icoPath = Path.Combine(IconCacheDir, $"{group.Id}.ico");
             SaveAsIco(canvas, icoPath);
 
-            // 使い終わったBitmapを解放
+            //使い終わったBitmapを解放
             foreach (var bmp in bitmaps)
                 bmp.Dispose();
             canvas.Dispose();
@@ -126,10 +126,10 @@ namespace TaskbarLauncher
             return icoPath;
         }
 
-        // Bitmap を .ico ファイルとして保存する
+        //Bitmap を .ico ファイルとして保存する
         private void SaveAsIco(Bitmap bitmap, string path)
         {
-            // 256×256 に縮小
+            //256×256 に縮小
             using var resized = new Bitmap(bitmap, new System.Drawing.Size(256, 256));
             using var ms = new MemoryStream();
             resized.Save(ms, ImageFormat.Png);
@@ -138,20 +138,20 @@ namespace TaskbarLauncher
             using var fs = new FileStream(path, FileMode.Create);
             using var writer = new BinaryWriter(fs);
 
-            // ICO ヘッダー
-            writer.Write((short)0);       // 予約
-            writer.Write((short)1);       // タイプ: アイコン
-            writer.Write((short)1);       // 画像の数: 1枚
+            //ICO ヘッダー
+            writer.Write((short)0);
+            writer.Write((short)1);
+            writer.Write((short)1);
 
-            // 画像ディレクトリエントリ
-            writer.Write((byte)0);        // 幅 (0 = 256)
-            writer.Write((byte)0);        // 高さ (0 = 256)
-            writer.Write((byte)0);        // カラーパレット数
-            writer.Write((byte)0);        // 予約
-            writer.Write((short)1);       // カラープレーン数
-            writer.Write((short)32);      // ビット深度
-            writer.Write(pngData.Length); // データサイズ
-            writer.Write(22);             // データの開始位置（ヘッダー6 + エントリ16 = 22）
+            //画像ディレクトリエントリ
+            writer.Write((byte)0); 
+            writer.Write((byte)0); 
+            writer.Write((byte)0); 
+            writer.Write((byte)0); 
+            writer.Write((short)1);
+            writer.Write((short)32); 
+            writer.Write(pngData.Length);
+            writer.Write(22);
 
             // PNG データ本体
             writer.Write(pngData);

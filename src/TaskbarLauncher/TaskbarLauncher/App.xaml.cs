@@ -40,12 +40,12 @@ namespace TaskbarLauncher
             //    System.Diagnostics.Debug.WriteLine("[App.OnStartup] メインアプリが起動していません。初回起動として処理します");
             //}
 
-            // ★ 起動時に1回だけ設定を読み込んでキャッシュする
+            //起動時に1回だけ設定を読み込んでキャッシュする
             var configManager = new ConfigManager();
             var groups = configManager.LoadGroups();
             NamedPipeServer.SetCachedGroups(groups);
 
-            // タスクトレイアイコンの初期化
+            //タスクトレイアイコンの初期化
             var notifyIcon = new System.Windows.Forms.NotifyIcon();
             try
             {
