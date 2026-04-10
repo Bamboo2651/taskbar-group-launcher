@@ -124,8 +124,11 @@ taskbar-group-launcher/
 │       ├── InputDialog.xaml         ← テキスト入力ダイアログ
 │       ├── InputDialog.xaml.cs      
 │       ├── MoveAppDialog.xaml       ← アプリ移動先選択ダイアログ
+│       ├── MoveAppDialog.xaml.cs
 │       ├── PopupWindow.xaml         ← ポップアップウィンドウ
+│       ├── PopupWindow.xaml.cs
 │       ├── MainWindow.xaml          ← 設定アプリのメイン画面
+│       ├── MainWindow.xaml.cs
 │       └── App.xaml                 ← 起動時の引数処理
 │       └── App.xaml.cs
 └──勉強/
