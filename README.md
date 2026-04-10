@@ -143,7 +143,7 @@ C:\Users\ユーザー名\AppData\Roaming\StackBar\groups.json
 ## 学習
 - [App.xaml](./src/TaskbarLauncher/勉強/App.xaml.md)
 - [App.xaml.cs](./src/TaskbarLauncher/勉強/App.xaml.cs.md)
-- [AssemblyInfo.cs](./src/TaskbarLauncher/勉強/AssemblyInfo.cs.md)
+- [AppConfig.cs]
 
 ---
 
