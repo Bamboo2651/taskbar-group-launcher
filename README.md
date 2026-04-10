@@ -122,6 +122,7 @@ taskbar-group-launcher/
 │       ├── NamedPipeClient.cs
 │       ├── Program.cs
 │       ├── InputDialog.xaml         ← テキスト入力ダイアログ
+│       ├── InputDialog.xaml.cs      
 │       ├── MoveAppDialog.xaml       ← アプリ移動先選択ダイアログ
 │       ├── PopupWindow.xaml         ← ポップアップウィンドウ
 │       ├── MainWindow.xaml          ← 設定アプリのメイン画面
